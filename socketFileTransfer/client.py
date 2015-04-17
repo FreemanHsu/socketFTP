@@ -104,10 +104,9 @@ class mysocketclient:
 		while 1:
 			filedata = fp.read(self.MSGLEN)
 			if not filedata: break
-			self.sock.send(filedata)
-			currentsize += len(filedata)
-			sys.stdout.write("\r"+'#'*(currentsize/filesize*40)+'\t'+str(currentsize/filesize*100)+'%')
-			sys.stdout.flush()
+			sent = self.sock.send(filedata)
+			currentsize += sent
+			sys.stdout.write("\r"+'#'*(currentsize*40/filesize)+'\t'+str(currentsize*100/filesize)+'%')
 		print
 		fp.close
 
@@ -136,8 +135,7 @@ class mysocketclient:
 				if not filedata: break
 				fp.write(filedata)
 				restsize = restsize - len(filedata)
-				sys.stdout.write("\r"+'#'*((filesize-restsize)/filesize*40)+'\t'+str((filesize-restsize)/filesize*100)+'%')
-				sys.stdout.flush()
+				sys.stdout.write("\r"+'#'*((filesize-restsize)*40/filesize)+'\t'+str((filesize-restsize)*100/filesize)+'%')
 				if restsize == 0: break
 			print
 			fp.close()
